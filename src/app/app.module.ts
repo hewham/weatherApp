@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 
 import { GeocoderProvider } from '../providers/geocoder';
 import { HTTPProvider } from '../providers/http';
+import { LocationProvider } from '../providers/location';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { HTTPProvider } from '../providers/http';
   ],
   providers: [
     GeocoderProvider,
-    HTTPProvider
+    HTTPProvider,
+    LocationProvider
   ],
   bootstrap: [AppComponent]
 })

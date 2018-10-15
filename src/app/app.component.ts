@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 
 import { GeocoderProvider } from '../providers/geocoder';
 import { HTTPProvider } from '../providers/http';
+import { LocationProvider } from '../providers/location';
 
 
 @Component({
@@ -16,55 +17,48 @@ export class AppComponent {
   currentTempTrueK = 0;
   currentTemp = 0;
   currentTempJSON = <any>{};
-  switch = "0";
+  switch = 0;
   degreesType = "F";
+  lat = 42.3314;
+  lng = -83.0458;
+  isLoading: boolean = true;
 
-  constructor( private geocoderProvider: GeocoderProvider, private httpProvider: HTTPProvider) {
+  constructor( private geocoderProvider: GeocoderProvider, private httpProvider: HTTPProvider, private locationProvider: LocationProvider) {
     this.init();
   }
 
   async init(){
-    // this.location = await this.getLocation();
-    console.log("this.location returned as: ",this.currentLocation);
-
+    // this.currentLocation = await this.getLocation();
+    // console.log("this.location returned as: ",this.currentLocation);
+    this.getWeather();
   }
 
-
-
-  getLocation() {
-    return new Promise((resolve) => {
-      console.log("getLocation()");
-      var options = {
-        timeout: 10000,
-        enableHighAccuracy: true
-      };
-  
-      if (window.navigator.geolocation) {
-        window.navigator.geolocation.getCurrentPosition(
-          (position) => {
-            console.log('got location : ', position);
-            resolve(position);
-          }, (error) => {
-            console.log('Geolocation error: ', error);
-          }, options);
-        } else {
-          console.log('Geolocation not supported in this browser');
-        }
-    });
+  getLocation(){
+    this.locationProvider.getLocation();
 
   }
 
   async getWeather(){
-    var lat = 35;
-    var lng = 42;
-    var url = "https://api.openweathermap.org/data/2.5/weather?lat="+String(lat)+"&lon="+String(lng)+"&APPID="+String(this.weatherAppId);
+    this.isLoading = true;
+    try{
+      this.currentLocation = await this.locationProvider.getLocation();
+    }
+    catch{
+      this.isLoading = false;
+    }
+    console.log("this.location returned as: ",this.currentLocation);
+    this.lat = this.currentLocation.coords.latitude;
+    this.lng = this.currentLocation.coords.longitude;
+
+    var url = "https://api.openweathermap.org/data/2.5/weather?lat="+String(this.lat)+"&lon="+String(this.lng)+"&APPID="+String(this.weatherAppId);
     
-    this.currentLocation = await this.geocoderProvider.reverseGeocoder(lat, lng);
-    console.log("LOCATION: ",this.currentLocation);
+    this.currentLocation = await this.geocoderProvider.reverseGeocoder(this.lat, this.lng);
     this.currentTempJSON = await this.httpProvider.httpWeatherCall(url);
-    console.log(this.currentTempJSON);
     this.currentTempTrueK = this.currentTempJSON.main.temp;
+    document.getElementById("weather-container").classList.remove("hidden");
+    this.isLoading = false;
     this.switchDegrees('F');
+
   }
 
 
@@ -80,6 +74,17 @@ export class AppComponent {
     document.getElementById("button-"+this.degreesType).classList.remove("active");
     document.getElementById("button-"+type).classList.add("active");
     this.degreesType = type;
+  }
+
+  changeSwitch(changeTo){
+    if(changeTo == 0){
+      document.getElementById("button-temp").classList.add("active");
+      document.getElementById("button-5day").classList.remove("active");
+    }else if(changeTo == 1){
+      document.getElementById("button-temp").classList.remove("active");
+      document.getElementById("button-5day").classList.add("active");
+    }
+    this.switch = changeTo;
   }
 
 
