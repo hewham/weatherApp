@@ -16,7 +16,7 @@ export class AppComponent {
   weatherAppId = "f4e684c62746716f90ffa981c9a5306d";
   currentTempTrueK = 0;
   currentTemp = 0;
-  currentTempJSON = <any>{};
+  forecast = [];
   switch = 0;
   degreesType = "F";
   lat = 42.3314;
@@ -30,7 +30,9 @@ export class AppComponent {
   async init(){
     this.isLoading = true;
     await this.getLocation();
-    await this.getWeather();
+    await this.getTemp();
+    await this.get5day();
+    this.isLoading = false;
   }
 
   async getLocation(){
@@ -53,15 +55,52 @@ export class AppComponent {
     return;
   }
 
-  async getWeather(){
+  async getTemp(){
     var url = "https://api.openweathermap.org/data/2.5/weather?lat="+String(this.lat)+"&lon="+String(this.lng)+"&APPID="+String(this.weatherAppId);
     
-    this.currentTempJSON = await this.httpProvider.httpWeatherCall(url);
-    this.currentTempTrueK = this.currentTempJSON.main.temp;
-    document.getElementById("weather-container").classList.remove("hidden");
-    this.isLoading = false;
-    this.switchDegrees('F');
+    var currentTempJSON = <any>{};
+    currentTempJSON = await this.httpProvider.httpWeatherCall(url);
 
+    this.currentTempTrueK = currentTempJSON.main.temp;
+    document.getElementById("weather-container").classList.remove("hidden");
+    this.switchDegrees('F');
+    return;
+  }
+
+
+
+  async get5day(){
+    var url = "https://api.openweathermap.org/data/2.5/forecast?lat="+String(this.lat)+"&lon="+String(this.lng)+"&APPID="+String(this.weatherAppId);
+    
+    var returnForecast = <any>{};
+    returnForecast = await this.httpProvider.httpWeatherCall(url);
+
+    var day = new Date();
+    var i = 0;
+    var onDay = 0;
+
+    //BUILD FORECAST ARRAY OF ARRAYS - CONTAINS DAYS WHICH CONTAIN HOURLY FORECASTS
+    for (let hourly of returnForecast.list){
+      // CHECKS FOR NEW DAY
+      if(i===0 || day.getDate() !== new Date(hourly.dt_txt).getDate()){
+        day = new Date(hourly.dt_txt);
+        this.forecast.push({});
+        if(i!==0){
+          onDay++;
+        }
+        i = 0;
+        this.forecast[onDay].date = day;
+        this.forecast[onDay].list = [];
+      }
+
+      // ADDS HOURLY FORECAST TO DAY
+      this.forecast[onDay].list.push(hourly);
+      this.forecast[onDay].list[i].iconUrl = "http://openweathermap.org/img/w/"+hourly.weather[0].icon+".png"
+      this.forecast[onDay].list[i].temp = Math.floor((hourly.main.temp * (9/5) - 459.67) * 10)/10;
+      this.forecast[onDay].list[i].description = hourly.weather[0].description;
+      i++;
+    }
+    return;
   }
 
 

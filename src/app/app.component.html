@@ -1,14 +1,10 @@
-<!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
-  <!-- <h1>
-    D Labs Weather
-  </h1> -->
-  <img style="border-radius: 50%" width="200" src="assets/cloud_fill.png">
+  <img style="border-radius: 50%; margin-top: 2em;" width="200" src="assets/cloud_fill.png">
 
 <div class="seperator"></div>
 
 <div class="switch-container">
-  <button id="button-temp" class="active" (click)="changeSwitch(0)">Current Temp</button>
+  <button id="button-temp" class="active" (click)="changeSwitch(0)">Current Temperature</button>
   <button id="button-5day" (click)="changeSwitch(1)">5 Day Forecast</button>
 </div>
 
@@ -17,13 +13,13 @@
 <div class="tint" *ngIf="isLoading">
     <img class="loading-img" src="assets/loading.gif">
 </div>
-
+<h2>
+    &nbsp;{{currentLocation.address}}&nbsp;
+</h2>
 <div *ngIf="switch==0">
 
   <div id="weather-container">
-    <h2>
-        &nbsp;{{currentLocation.address}}&nbsp;
-    </h2>
+
     <h4 style="color: #00c0b0">
       Current Temperature
     </h4>
@@ -39,7 +35,26 @@
 
 
 <div *ngIf="switch==1">
-  <p>5 day </p>
+  <h4 style="color: #00c0b0">
+    5 Day Forecast
+  </h4>
+
+  <div class="day-column" *ngFor="let day of forecast">
+    <h2 style="margin-bottom: 0;">{{day.date | date :  "EEE" }}</h2>
+    <p style="margin-top: 0; color: #00c0b0;">{{day.date | date :  "MMM d" }}</p>
+
+
+    <div *ngFor="let hourly of day.list">
+      <div class="seperator"></div>
+      <span><b>{{hourly.dt_txt | date :  "h a" }}</b></span>
+      <br/>
+      <span style="color: #00c0b0">{{hourly.temp}} &deg;F</span>
+      <br/>
+      <img class="hourly-img" [src]="hourly.iconUrl" />
+      <br/>
+      <span style="text-transform: capitalize;">{{hourly.description}}</span>
+    </div>
+  </div>
 </div>
 
 <div class="note">

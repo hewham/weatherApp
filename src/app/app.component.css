@@ -4,9 +4,9 @@
 .note{
   color: #a8a8a8;
   position: absolute;
-  bottom: 0;
+  top: 0;
   width: 100%;
-  text-align: center;
+  text-align: left;
 }
 .tint{
   position: absolute;
@@ -32,6 +32,16 @@
   width: 40%;
   margin-left: 30%;
   border-top: #e0e0e0 solid 2px;
+}
+
+.day-column{
+  width: 18%;
+  min-width: 160px;
+  display: inline-block;
+  background: #e8e8e8;
+  margin: 0 1% 20px 1%;
+  border-radius: 10px;
+  padding-bottom: 10px;
 }
 
 .hidden{
