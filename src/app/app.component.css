@@ -1,0 +1,31 @@
+* {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.seperator{
+  height: 20px;
+  width: 60%;
+  margin-left: 20%;
+  border-top: #e0e0e0 solid 2px;
+}
+
+
+.active {
+  background: #00c0b0;
+  color: white;
+}
+button{
+  border-radius: 10px !important;
+  border: solid 3px #e0e0e0;
+  padding: 12px 38px !important;
+  text-align: center !important;
+  text-decoration: none !important;
+  display: inline-block !important;
+  font-size: 15px !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+button:hover{
+  border: #00c0b0 solid 3px;
+}

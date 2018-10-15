@@ -3,6 +3,10 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 
+import { GeocoderProvider } from '../providers/geocoder';
+import { HTTPProvider } from '../providers/http';
+
+
 @NgModule({
   declarations: [
     AppComponent
@@ -10,7 +14,10 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule
   ],
-  providers: [],
+  providers: [
+    GeocoderProvider,
+    HTTPProvider
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
