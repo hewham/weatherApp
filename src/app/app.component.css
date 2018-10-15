@@ -1,6 +1,13 @@
 * {
   font-family: Arial, Helvetica, sans-serif;
 }
+.note{
+  color: #a8a8a8;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+}
 .tint{
   position: absolute;
   top: 0;

@@ -28,31 +28,34 @@ export class AppComponent {
   }
 
   async init(){
-    // this.currentLocation = await this.getLocation();
-    // console.log("this.location returned as: ",this.currentLocation);
-    this.getWeather();
+    this.isLoading = true;
+    await this.getLocation();
+    await this.getWeather();
   }
 
-  getLocation(){
-    this.locationProvider.getLocation();
+  async getLocation(){
+    this.currentLocation = await this.locationProvider.getLocation();
+    if(this.currentLocation == "error"){
+      await this.askForLocation();
+    }else{
+      this.lat = this.currentLocation.coords.latitude;
+      this.lng = this.currentLocation.coords.longitude;
+      this.currentLocation = await this.geocoderProvider.reverseGeocoder(this.lat, this.lng);
+    }
+    return;
+  }
 
+  async askForLocation(){
+    var inputLocation = prompt("Couldn't detect your location, please enter one.", "Detroit, MI");
+    this.currentLocation = await this.geocoderProvider.geocoder(inputLocation);
+    this.lat = this.currentLocation.latitude;
+    this.lng = this.currentLocation.longitude;
+    return;
   }
 
   async getWeather(){
-    this.isLoading = true;
-    try{
-      this.currentLocation = await this.locationProvider.getLocation();
-    }
-    catch{
-      this.isLoading = false;
-    }
-    console.log("this.location returned as: ",this.currentLocation);
-    this.lat = this.currentLocation.coords.latitude;
-    this.lng = this.currentLocation.coords.longitude;
-
     var url = "https://api.openweathermap.org/data/2.5/weather?lat="+String(this.lat)+"&lon="+String(this.lng)+"&APPID="+String(this.weatherAppId);
     
-    this.currentLocation = await this.geocoderProvider.reverseGeocoder(this.lat, this.lng);
     this.currentTempJSON = await this.httpProvider.httpWeatherCall(url);
     this.currentTempTrueK = this.currentTempJSON.main.temp;
     document.getElementById("weather-container").classList.remove("hidden");
