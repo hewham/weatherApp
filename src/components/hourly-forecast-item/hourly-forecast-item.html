@@ -1,0 +1,7 @@
+<span><b>{{hourly.dt_txt | date :  "h a" }}</b></span>
+<br/>
+<span style="color: #00c0b0">{{hourly.temp}} &deg;F</span>
+<br/>
+<img class="hourly-img" [src]="hourly.iconUrl" />
+<br/>
+<span style="text-transform: capitalize;">{{hourly.description}}</span>

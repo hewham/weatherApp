@@ -50,6 +50,10 @@ export class AppComponent {
   async askForLocation(){
     var inputLocation = prompt("Couldn't detect your location, please enter one.", "Detroit, MI");
     this.currentLocation = await this.geocoderProvider.geocoder(inputLocation);
+    if(this.currentLocation == "ERROR"){
+      this.askForLocation();
+      return;
+    }
     this.lat = this.currentLocation.latitude;
     this.lng = this.currentLocation.longitude;
     return;

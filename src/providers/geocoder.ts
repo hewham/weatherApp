@@ -117,7 +117,10 @@ export class GeocoderProvider {
              resolve(location);
            } else {
              console.log("No address available");
+             resolve("ERROR");
            }
+         }else{
+          resolve("ERROR");
          }
        });
       });

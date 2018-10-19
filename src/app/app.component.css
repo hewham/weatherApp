@@ -36,12 +36,13 @@
 
 .day-column{
   width: 18%;
-  min-width: 160px;
+  min-width: 140;
   display: inline-block;
   background: #e8e8e8;
   margin: 0 1% 20px 1%;
   border-radius: 10px;
   padding-bottom: 10px;
+  vertical-align: top;
 }
 
 .hidden{
