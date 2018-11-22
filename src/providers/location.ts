@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class LocationProvider {
   options = {
-    timeout: 0,
+    timeout: 10000,
     enableHighAccuracy: true
   };
 
